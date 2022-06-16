@@ -10,11 +10,11 @@
 #include "files/define.h"
 #include "files/vaccines.h"
 
-int IsolationState;        // 0 - off, 1 - on 
-int StartOfIsolation;      // days
+int IsolationState;         // 0 - off, 1 - on 
+int StartOfIsolation;       // days
 int StartOfVaccination;     // days
-double ProportionIsolated; // %
-double PercVaccination;   // %
+double ProportionIsolated;  // %
+double PercVaccination;     // %
 
 
 int availableVac; // available vaccines
@@ -650,9 +650,9 @@ int main(int argc, char *argv[])
 			Updatefunc();   /* Update lattice */
 			//if(rank==master)
 				//printf("S TOTAL = %d\n", S_Total);
-		} // for time
+		}
 		printf(">Rank %d - Sim %d done\n", rank, Simulation);
-    } // for simulation
+    }
     
 
 	// Prevalence headers
