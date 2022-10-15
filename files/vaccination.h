@@ -1,8 +1,8 @@
-void Vaccination(int i, int j, int vac, int begin) //int begin -> 1 = called from begin function, 0 = called from simulation steps
+void VaccinationFunc(int i, int j, int vac, int begin, double percVaccination) 
 {
+    // int begin -> 1 = called from begin function, 0 = called from simulation steps
     double probVac;
-    probVac = begin==1 ? 1. : PercVaccination; // person is always vaccinated when called from begin function
-    //printf("probVac = %f\n", probVac);
+    probVac = begin==1 ? 1. : percVaccination; // if VaccinationFunc is called from begin function, person will always be vaccinated
     aleat();
     //if(rn > 0.03) // vaccine hesitancy
     if(rn<=probVac) // person will be vaccinated

@@ -1,4 +1,4 @@
-void NaturalDeathfunc() // Brazil
+void NaturalDeathFunc() // Brazil
 {
   int i;
   ProbNaturalDeath[0] 	=	0.011556;

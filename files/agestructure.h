@@ -1,4 +1,4 @@
-void Agestructure() // Brazil
+void AgeStructure() // Brazil
 {
   ProbBirthAge[1]  	=	0.06960000; // 0–4 years
   ProbBirthAge[2]  	=	0.06920000; // 5–9
@@ -20,7 +20,6 @@ void Agestructure() // Brazil
   ProbBirthAge[18] 	=	0.00590000; // 85–89
   ProbBirthAge[19] 	=	0.00380000; // 90+
 	
-
   SumProbBirthAge[0]  = ProbBirthAge[1];
   SumProbBirthAge[1]  = SumProbBirthAge[0]  + ProbBirthAge[2];
   SumProbBirthAge[2]  = SumProbBirthAge[1]  + ProbBirthAge[3];

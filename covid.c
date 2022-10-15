@@ -10,26 +10,17 @@
 #include "files/define.h"
 #include "files/vaccines.h"
 
-int IsolationState;         // 0 - off, 1 - on 
-int StartOfIsolation;       // days
-int StartOfVaccination;     // days
-double ProportionIsolated;  // %
-double PercVaccination;     // %
 
-
-int availableVac; // available vaccines
-
-struct Individual
-{
+struct Individual{
 	int Health;        // host health state
-	int Swap;          // host health state  to update lattice
+	int Swap;          // host health state to update lattice
 	int Gender;
 	int AgeYears;
 	int AgeDays;
 	int AgeDeathYears;  
-	int AgeDeathDays;	//
-	int StateTime;  	// 	
-	int TimeOnState;	//
+	int AgeDeathDays;
+	int StateTime;	
+	int TimeOnState;
 	int Days;
 	int Isolation;
 	int Exponent;       // in case they met an infectous person
@@ -37,21 +28,6 @@ struct Individual
 	int IsVaccinated;   // 0 -> not vaccinated
 }Person[L+2][L+2];
 
-char nome[30];
-
-/* Data files */					  
-FILE *fp;
-FILE *gp;
-FILE *hp;
-FILE *ip;
-FILE *jp;
-
-FILE *rawincidence;
-FILE *rawprevalence;
-
-double *p;
-
- 
 int S_Total;
 int E_Total;               
 int IP_Total;               
@@ -79,9 +55,9 @@ int New_Recovered;
 int New_DeadCovid;       
 int New_Dead;        
 int New_Vac;      
-                     
-/*********************************/
 
+/*********************************/
+// Temporary sums and mean values
 double S_TotalTemp[MAXSIM+2][DAYS+2]; 
 double E_TotalTemp[MAXSIM+2][DAYS+2];                
 double IP_TotalTemp[MAXSIM+2][DAYS+2];                
@@ -96,7 +72,6 @@ double DeadCovid_TotalTemp[MAXSIM+2][DAYS+2];
 double Dead_TotalTemp[MAXSIM+2][DAYS+2];    
 double Vac_TotalTemp[MAXSIM+2][DAYS+2];           
       
-
 double S_Mean[DAYS+2];
 double E_Mean[DAYS+2];               
 double IP_Mean[DAYS+2];               
@@ -109,8 +84,7 @@ double ICU_Mean[DAYS+2];
 double Recovered_Mean[DAYS+2];       
 double DeadCovid_Mean[DAYS+2];       
 double Dead_Mean[DAYS+2];           
-double Vac_Mean[DAYS+2];            
-
+double Vac_Mean[DAYS+2];          
 
 double New_S_Temp[MAXSIM+2][DAYS+2]; 
 double New_E_Temp[MAXSIM+2][DAYS+2];                
@@ -126,7 +100,6 @@ double New_DeadCovid_Temp[MAXSIM+2][DAYS+2];
 double New_Dead_Temp[MAXSIM+2][DAYS+2];          
 double New_Vac_Temp[MAXSIM+2][DAYS+2];              
 
-
 double New_S_Mean[DAYS+2];
 double New_E_Mean[DAYS+2];               
 double New_IP_Mean[DAYS+2];               
@@ -140,7 +113,6 @@ double New_Recovered_Mean[DAYS+2];
 double New_DeadCovid_Mean[DAYS+2];       
 double New_Dead_Mean[DAYS+2];       
 double New_Vac_Mean[DAYS+2];       
-
 
 // Final sums
 double S_Sum[DAYS+2];
@@ -157,7 +129,6 @@ double DeadCovid_Sum[DAYS+2];
 double Dead_Sum[DAYS+2];           
 double Vac_Sum[DAYS+2];         
 
-
 double New_S_Sum[DAYS+2];
 double New_E_Sum[DAYS+2];               
 double New_IP_Sum[DAYS+2];               
@@ -171,7 +142,6 @@ double New_Recovered_Sum[DAYS+2];
 double New_DeadCovid_Sum[DAYS+2];       
 double New_Dead_Sum[DAYS+2];        
 double New_Vac_Sum[DAYS+2];        
-
 
 // Sums for MPI Reduce
 double MS_Sum[DAYS+2];
@@ -188,7 +158,6 @@ double MDeadCovid_Sum[DAYS+2];
 double MDead_Sum[DAYS+2];         
 double MVac_Sum[DAYS+2];         
 
-
 double MNew_S_Sum[DAYS+2];
 double MNew_E_Sum[DAYS+2];               
 double MNew_IP_Sum[DAYS+2];               
@@ -203,6 +172,7 @@ double MNew_DeadCovid_Sum[DAYS+2];
 double MNew_Dead_Sum[DAYS+2];         
 double MNew_Vac_Sum[DAYS+2];        
 
+/*********************************/
 
 double ProbNaturalDeath[121];
 double ProbBirthAge[21];
@@ -216,20 +186,9 @@ double ProbRecoveryICU[121];
 int AgeMin[21];
 int AgeMax[21];
 
-int timesim;
 int Simulation;
 int CountDays;
 int Contagion;  
-
-unsigned R;
-unsigned mult;
-
-double rn;
-
-double CurrentIsolated;
-double MAXISOLATED;
-
-char cad[35];
 
 double TotalInfectious;
 double TotalInfectiousNew;
@@ -240,46 +199,32 @@ int AvailableBedsICU;
 int MaximumIsolated;
 int CountIsolated;
 
-double valueR0;
-
-int vaccineAgeMin;
-int vaccineAgeMax;
-
 double MaxRandomContacts;
 double MinRandomContacts;
 
 int NumberOfHospitalBeds;
 int NumberOfICUBeds;
 
-char nomeincidence[30];
-char nomeprevalence[30];
-
 //////////////////////////////////////////////////////////
 
-double *calcProb(double MaxRandomContacts) // 
-{
-	int k, n;
-	n = 9 + (int)MaxRandomContacts;   // max infectious neighbors + max random contacts rounded up = 8 + MaxRandomContacts + 1
-	p = malloc(n*sizeof(double));     // 
-	for(k=0;k<n;k++)                  //
-		p[k] = 1.0 - pow(1.0 - Beta,(double)k);
-	//return p;
-}
+// Random Number Generator
+
+unsigned R;
+double rn;
 
 double aleat()
 {
-    R*= mult;
+    R*= 888121; // for 32 bits compilers
     rn = (double)R/MAXNUM;    /* gerenerate random number [0.0,1.0] */
 }
-
 
 #include "files/vaccination.h"
 #include "files/begin.h"
 #include "files/death.h"
 #include "files/agestructure.h"
-#include "files/probsrecovery.h"
-#include "files/Neighbors.h"
-#include "files/Neighborsinfected.h"
+#include "files/recovery.h"
+#include "files/neighbors.h"
+#include "files/neighbors_infected.h"
 #include "files/S.h"
 #include "files/E.h"                                                              
 #include "files/IP.h"    
@@ -287,67 +232,66 @@ double aleat()
 #include "files/H.h"                                           
 #include "files/ICU.h"
 #include "files/isolation.h"
+#include "files/pbc.h"
 #include "files/Update.h"
 
 /////////////////////////////////////////////////////////////
 
 int main(int argc, char *argv[])
-{
-    int i, j, t, tag=1;
-    int seed, master, ierr, size, rank;
-	int start, end, step;
-	double t1, t2;
-	int maxsim;
-	int vaccination = 0; // 0 - no vaccination
-	int vaccine;
-	int count;
-    
+{	
+	/* Data files */					  
+	FILE *fp, *gp, *hp, *ip, *jp;
+    int i, j, t, count;
+    int seed, master, ierr, size, rank;	// MPI variables
+	int start, end, step, tag=1;  		// MPI variables
+	int timeSim;
+	int vaccine;  // 0 - no vaccination
+	int isolationState;           // 0 - Isolation off, 1 - Isolation on 
+	int startOfIsolation;         // [0-400] days
+	int startOfVaccination;    	  // [0-400] days
+	double proportionIsolated;    // [0-1]
+	double percentageVaccination; // [0-1]
+	int vacCurrentMin, vacCurrentMax;
+	double t1, t2; // t2 - t1 = elapsed runtime
+	
     gp = fopen("parameters.out","w");
     fp = fopen("epidemicsprevalence.csv", "w");
     ip = fopen("epidemicsincidence.csv", "w");
     hp = fopen("InfPrevalence.csv","w");
     jp = fopen("InfIncidence.csv","w");
     
-  	// R = 893221891;
-    
-    mult = 888121;  // for 32 bits compilers
-
-    MPI_Status rstatus; // 
+	// Initializes MPI
+    MPI_Status rstatus; 
     ierr = MPI_Init(&argc, &argv);
     ierr = MPI_Comm_size(MPI_COMM_WORLD, &size);
     ierr = MPI_Comm_rank(MPI_COMM_WORLD, &rank); 
     
-	t1 = MPI_Wtime(); // 
+	t1 = MPI_Wtime();
 
 	vaccine = atoi(argv[1]); // gets vaccine from command line arguments
-	IsolationState = atoi(argv[2]);
-	ProportionIsolated = atof(argv[3]);
-	StartOfIsolation = atoi(argv[4]);
-	PercVaccination = atof(argv[5]);
-	StartOfVaccination = atoi(argv[6]);
-	
-
-	availableVac = PercVaccination*N;
+	isolationState = atoi(argv[2]);
+	proportionIsolated = atof(argv[3]);
+	startOfIsolation = atoi(argv[4]);
+	percentageVaccination = atof(argv[5]);
+	startOfVaccination = atoi(argv[6]);
 
 	master = 0;
     seed = 2;
-    seed *= rank + 2; // random seed for each process
+    seed *= rank + 2; // different random seed for each process
     
-
 	if(rank==master)
 	{
 		printf("\n\n****Running in parallel with %d processes****\n", size);
-		printf("Population Density: %s\n", Density == HIGH ? "High" : "Low");
 		if(vaccine!=0)
 		{
-			printf("Begin of Vaccination: %d days\n", StartOfVaccination);
-			printf("Proportion Vaccinated: %f \n", PercVaccination);
+			printf("Begin of Vaccination: %d days\n", startOfVaccination);
+			printf("Proportion Vaccinated: %f\n", percentageVaccination);
 
 		}
-		if(IsolationState==ON)
+		if(isolationState==ON)
 		{
-			printf("Begin of Isolation: %d days\n", StartOfIsolation);
-			printf("Proportion Isolated: %f \n", ProportionIsolated);
+			printf("Begin of Isolation: %d days\n", startOfIsolation);
+			printf("Proportion Isolated: %f\n", proportionIsolated);
 		}
 		else
 			puts("No Isolation");
@@ -388,8 +332,8 @@ int main(int argc, char *argv[])
 	}
 	
     MPI_Barrier(MPI_COMM_WORLD);
-    Agestructure(); 
-    NaturalDeathfunc(); // call the values for natural death probability
+    AgeStructure(); 
+    NaturalDeathFunc(); // call the values for natural death probability
     ProbsRecovery();
        
 	for(t=0;t<=DAYS;t++)
@@ -455,54 +399,36 @@ int main(int argc, char *argv[])
 			MNew_Vac_Sum[t]        = 0.0;               	
 		}
 
-	#if(Density==LOW) // low demographic density
+	#if(DENSITY==LOW) // low demographic density
 	{
-		//printf("LOW demographic density\n");
-		
 		MaxRandomContacts = 2.5;
 		MinRandomContacts = 2.5;
-		
 		NumberOfHospitalBeds = 716;  
 		NumberOfICUBeds      = 66;
 	}
-	#elif(Density==HIGH)
-	{
-		//printf("HIGH demographic density\n");
-		
+	#elif(DENSITY==HIGH)
+	{		
 		MaxRandomContacts = 120.5;
 		MinRandomContacts = 2.5;
-		
 		NumberOfHospitalBeds = 38;  
 		NumberOfICUBeds      = 10;
 	}
 	#else // Density == BRAZIL
 	{
-		// https://www.gove.digital/wp-content/uploads/2020/03/Leitos.pdf
-		MaxRandomContacts = 5.0;
-		MinRandomContacts = 2.5;
-		
+		// ref: https://www.gove.digital/wp-content/uploads/2020/03/Leitos.pdf
+		MaxRandomContacts = 3.0;
+		MinRandomContacts = 0.0;
 		NumberOfHospitalBeds = 836;  
 		NumberOfICUBeds      = 69;
 	}
 	#endif
 
-	/*
-	#if(StartOfIsolation==NO)
-		MaximumIsolated = ProportionIsolated*N;	
-	#else
-		MaximumIsolated = 0;
-	#endif	*/
-
-	if(IsolationState==ON)
-		MaximumIsolated = ProportionIsolated*N;	
+	// Isolation
+	if(isolationState==ON)
+		MaximumIsolated = proportionIsolated*N;	
 	else
 		MaximumIsolated = 0;
 
-	//if(rank == master)
-	//	calcProb(MaxRandomContacts);
-	//MPI_Bcast(&p, 9 + (int)MaxRandomContacts, MPI_DOUBLE, master, MPI_COMM_WORLD); // broadcasts array p to everyone
-
-	//step = size == 1 ? 1 : MAXSIM/size;
 	start = 1 + rank;
 	end = start + MAXSIM - size;
 
@@ -510,52 +436,23 @@ int main(int argc, char *argv[])
     {
 		seed = Simulation+2*rank;
 		R = 893221891*seed*10000;
-		
-		/*
-		if(rank == 1)
-			printf("Sim %d started - seed = %d - R = %u\n", Simulation, seed, R);
-		*/
-		
+	
+		vacCurrentMax = 121;
+		vacCurrentMin = 90;
+
 		//printf("Rank %d - Sim %d - R = %u\n", rank, Simulation, R);
-		beginfunc(vaccine);
+		BeginFunc(vaccine, vacCurrentMin);
 		CountDays = 0;
 
-		/**** RAW FILES  ****
-		sprintf(nomeincidence,"output/incidence_%i.csv", Simulation);
-		rawincidence = fopen(nomeincidence,"a+");
-		fprintf(rawincidence,"%d,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf\n",CountDays,New_S_Temp[Simulation][CountDays],New_E_Temp[Simulation][CountDays],New_IP_Temp[Simulation][CountDays],
-		New_IA_Temp[Simulation][CountDays],New_ISLight_Temp[Simulation][CountDays],New_ISModerate_Temp[Simulation][CountDays],New_ISSevere_Temp[Simulation][CountDays],New_H_Temp[Simulation][CountDays],
-		New_ICU_Temp[Simulation][CountDays],New_Recovered_Temp[Simulation][CountDays],New_DeadCovid_Temp[Simulation][CountDays],New_Vac_Temp[Simulation][CountDays]);           
-		fclose(rawincidence);   
-	
-		sprintf(nomeprevalence,"output/prevalence_%i.csv", Simulation);
-		rawprevalence = fopen(nomeprevalence,"a+");
-		fprintf(rawprevalence,"%d,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf\n",CountDays,S_TotalTemp[Simulation][CountDays],E_TotalTemp[Simulation][CountDays],IP_TotalTemp[Simulation][CountDays],
-		IA_TotalTemp[Simulation][CountDays],ISLight_TotalTemp[Simulation][CountDays],ISModerate_TotalTemp[Simulation][CountDays],ISSevere_TotalTemp[Simulation][CountDays],H_TotalTemp[Simulation][CountDays],
-		ICU_TotalTemp[Simulation][CountDays],Recovered_TotalTemp[Simulation][CountDays],DeadCovid_TotalTemp[Simulation][CountDays],Vac_TotalTemp[Simulation][CountDays]);           
-		fclose(rawprevalence); 
-		
-		************************************************/
+		/************************************************/
 
 		AvailableBeds = NumberOfHospitalBeds - NumberOfHospitalBeds*AverageOcupationRateBeds; // Considering beds occupied due to other diseases	
 		AvailableBedsICU = NumberOfICUBeds - NumberOfICUBeds*AverageOcupationRateBedsICU;
 	
 		// before vaccination
-		for(timesim=0; timesim<StartOfVaccination; timesim++)  
+		for(timeSim=0; timeSim<startOfVaccination; timeSim++)  
 		{  
-			for(i=1;i<=L;i++) /* Periodic boudandry conditions */
-			{
-				Person[0][i].Health   = Person[L][i].Health;
-				Person[L+1][i].Health = Person[1][i].Health;
-				Person[i][0].Health   = Person[i][L].Health;
-				Person[i][L+1].Health = Person[i][1].Health;
-			}
-			
-			Person[0][0].Health     = Person[L][L].Health;  /* Periodic boudandry conditions in the borders */
-			Person[0][L+1].Health   = Person[L][1].Health;
-			Person[L+1][0].Health   = Person[1][L].Health;
-			Person[L+1][L+1].Health = Person[1][1].Health;
-		
+			pbc(); // Periodic boundary conditions
 			for(i=1;i<=L;i++)
 				for(j=1;j<=L;j++)
 				{
@@ -574,48 +471,20 @@ int main(int argc, char *argv[])
 					else if(Person[i][j].Health==Recovered)
 						Person[i][j].Swap = Recovered;
 				}
+			UpdateFunc(timeSim, isolationState, proportionIsolated, startOfIsolation);   /* Update lattice */
+		}
 
-			//if(timesim == 150 || timesim == 300)
-			//	printf("\n%d - Rank %d - day %d", Simulation, rank, timesim);
-			//if(rank==master)
-			//	printf("dia %d\n", timesim);
-			Updatefunc();   /* Update lattice */
-		} // for time
-
-		vaccineAgeMax = 121;
-		vaccineAgeMin = 90;
 		count = 1;
-
-		// Everyone is vaccinated at once
-		/*vaccineAgeMin = 95;
-		  for(i=1;i<=L;i++)
-			for(j=1;j<=L;j++)
-				if(vaccine!=0 && Person[i][j].AgeYears>=vaccineAgeMin && Person[i][j].IsVaccinated==0) // not vaccinated yet
-					if(Person[i][j].Health==S || Person[i][j].Health==E) // susceptible and latent can be vaccinated
-						Vaccination(i, j, vaccine);*/
-
 		// vaccination
-		for(timesim=StartOfVaccination; timesim<=DAYS; timesim++)  
+		for(timeSim=startOfVaccination; timeSim<=DAYS; timeSim++)  
 		{  
-			for(i=1;i<=L;i++) /* Periodic boudandry conditions */
-			{
-				Person[0][i].Health   = Person[L][i].Health;
-				Person[L+1][i].Health = Person[1][i].Health;
-				Person[i][0].Health   = Person[i][L].Health;
-				Person[i][L+1].Health = Person[i][1].Health;
-			}
-			
-			Person[0][0].Health     = Person[L][L].Health;  /* Periodic boundary conditions in the borders */
-			Person[0][L+1].Health   = Person[L][1].Health;
-			Person[L+1][0].Health   = Person[1][L].Health;
-			Person[L+1][L+1].Health = Person[1][1].Health;
-		
+			pbc(); // Periodic boundary conditions
 			for(i=1;i<=L;i++)
 				for(j=1;j<=L;j++)
 				{
-					if(vaccine!=0 && Person[i][j].AgeYears>=vaccineAgeMin && Person[i][j].AgeYears<vaccineAgeMax && Person[i][j].IsVaccinated==0) // not vaccinated yet
+					if(vaccine!=0 && Person[i][j].AgeYears>=vacCurrentMin && Person[i][j].AgeYears<vacCurrentMax && Person[i][j].IsVaccinated==0) // not vaccinated yet
 						if(Person[i][j].Health==S || Person[i][j].Health==E || Person[i][j].Health==Recovered) // susceptible and latent can be vaccinated
-							Vaccination(i, j, vaccine, 0);
+							VaccinationFunc(i, j, vaccine, 0, percentageVaccination);
 					if(Person[i][j].Health==S)
 						Sfunc(i,j);
 					else if(Person[i][j].Health==E)
@@ -631,30 +500,27 @@ int main(int argc, char *argv[])
 					else if(Person[i][j].Health==Recovered)
 						Person[i][j].Swap = Recovered;
 				}
-			if(count<DAYS_LOWER_AGE) // days to lower min age for vaccination
+			if(count<DAYS_LOWER_AGE) // days to lower current min age for vaccination
 				count++;
 			else
 			{
-				if(vaccineAgeMin>VACCINE_AGE_MIN) 
+				if(vacCurrentMin>VACCINE_AGE_MIN) 
 				{
-					vaccineAgeMax = vaccineAgeMin;
-					vaccineAgeMin -= LOWER_MIN_AGE;
+					vacCurrentMax = vacCurrentMin;
+					vacCurrentMin -= LOWER_MIN_AGE;
 					count = 1;
 				}
 				else
 				{
-					vaccineAgeMax = VACCINE_AGE_MIN+1;
-					vaccineAgeMin = VACCINE_AGE_MIN;
+					vacCurrentMax = VACCINE_AGE_MIN+1;
+					vacCurrentMin = VACCINE_AGE_MIN;
 				}
 			}
-			Updatefunc();   /* Update lattice */
-			//if(rank==master)
-				//printf("S TOTAL = %d\n", S_Total);
+			UpdateFunc(timeSim, isolationState, proportionIsolated, startOfIsolation);   /* Update lattice */
 		}
 		printf(">Rank %d - Sim %d done\n", rank, Simulation);
     }
     
-
 	// Prevalence headers
 	fprintf(hp, "Time,PreSymptomatic,Asymptomatic,Light,Moderate,Severe,Total\n");
 	fprintf(fp, "Time,Susceptible,Exposed,InfPresymptomatic,InfAsymptomatic,Infectious,Hospitalized,ICU,Recovered,CovidDead,Vaccinated\n");
@@ -730,13 +596,11 @@ int main(int argc, char *argv[])
 			
 			/* incidence */
 			fprintf(ip,"%d,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf\n",t,New_S_Mean[t],New_E_Mean[t],New_IP_Mean[t],New_IA_Mean[t],TotalInfectiousNew,New_H_Mean[t],New_ICU_Mean[t],New_Recovered_Mean[t],New_DeadCovid_Mean[t],New_Vac_Mean[t]);           
-				
-			//printf("%i\t%.10lf\n",t,N*DeadCovid_Mean[t]);
-	
+
 			/* prevalence */
 			fprintf(fp,"%d,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf,%.10lf\n",t,S_Mean[t],E_Mean[t],IP_Mean[t],IA_Mean[t],TotalInfectious,H_Mean[t],ICU_Mean[t],Recovered_Mean[t],DeadCovid_Mean[t],Vac_Mean[t]); 
 				
-		} // t=0,t<DAYS
+		}
 		t2 = MPI_Wtime();
 		printf("\nElapsed time: %f seconds\n", t2 - t1);
 		printf("Done!\n\n");

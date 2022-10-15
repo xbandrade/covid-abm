@@ -1,9 +1,9 @@
-void beginfunc(int vaccine)
+void BeginFunc(int vaccine, int vacCurrentMin)
 {
-	int i,j,k;
-	int mute;
-	int MaximumAge;
-	int MinimumAge;
+	int i, j, k;
+	int aux;
+	int maximumAge;
+	int minimumAge;
  
 	S_Total          = 0;
 	E_Total          = Eini;
@@ -43,35 +43,34 @@ void beginfunc(int vaccine)
 			Person[i][j].Checked = 0; 
 			Person[i][j].IsVaccinated = 0;         // no vaccination
 
-			mute = 0;
+			aux = 0;
 			k = 0;
 			aleat();
 			if(rn<=SumProbBirthAge[k])// SumProbBirthAge[k] is in agestructure.h
 			{
-				mute = 1;  
-				MaximumAge = AgeMax[k];
-				MinimumAge = AgeMin[k];
+				aux = 1;  
+				maximumAge = AgeMax[k];
+				minimumAge = AgeMin[k];
 			}
 			else
 			{
-				do
-				{
+				do{
 					if(rn>SumProbBirthAge[k] && rn<=SumProbBirthAge[k+1])
 					{
-						mute = 1;
-						MaximumAge = AgeMax[k+1];
-						MinimumAge = AgeMin[k+1];
+						aux = 1;
+						maximumAge = AgeMax[k+1];
+						minimumAge = AgeMin[k+1];
 					}
 					else
 					{
-						mute = 0;
+						aux = 0;
 						k++;
 					}
-				}while(mute < 1);
+				}while(aux < 1);
 			}
         
 			aleat();
-			Person[i][j].AgeYears = rn*(MaximumAge - MinimumAge) + MinimumAge;
+			Person[i][j].AgeYears = rn*(maximumAge - minimumAge) + minimumAge;
 			Person[i][j].AgeDays  = Person[i][j].AgeYears*365;
 			
 			aleat();
@@ -83,18 +82,17 @@ void beginfunc(int vaccine)
 			Person[i][j].Days = 0;         // set to zero the number of days a person is in the simulation  
 			
 			//Define age of natural death
-			mute = 0;
+			aux = 0;
 			do{
 				aleat();
 				Person[i][j].AgeDeathYears = rn*100;
 				aleat();
 				if(rn < ProbNaturalDeath[Person[i][j].AgeDeathYears])
-					mute = 1; // accept
+					aux = 1;  // accept
 				else
-					mute = 0;  // reject
-			}while(mute<1);
+					aux = 0;  // reject
+			}while(aux<1);
 			Person[i][j].AgeDeathDays = Person[i][j].AgeDeathYears*365;
-	
 			S_Total++;
 		}// for j
 	}// for i
@@ -102,8 +100,7 @@ void beginfunc(int vaccine)
    	/* Random distribution of infected individuals in t=0 */
 	k=0;
 	if(Eini > 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
 			aleat();
@@ -126,21 +123,17 @@ void beginfunc(int vaccine)
     /**********************************/  
     k=0;
 	if(IPini > 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
-			
 			aleat();
 			j = rn*L + 1;
-
 			if(Person[i][j].Health==S)
 			{
 				Person[i][j].Health = IP;
 				aleat();
 				Person[i][j].StateTime = rn*(MaxIP - MinIP) + MinIP;
 				Person[i][j].Isolation = IsolationNo;
-
 				S_Total--;
 				IP_Total++;
 				New_IP++;
@@ -151,14 +144,11 @@ void beginfunc(int vaccine)
     /******************************************/
     k=0;
 	if(IAini > 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
-			
 			aleat();
 			j = rn*L + 1;
-
 			if(Person[i][j].Health==S)
 			{
 				Person[i][j].Health = IA;
@@ -175,13 +165,11 @@ void beginfunc(int vaccine)
     /*****************************************/
 	k=0;
 	if(ISLightini > 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
 			aleat();
 			j = rn*L + 1;
-
 			if(Person[i][j].Health==S)
 			{
 				Person[i][j].Health = ISLight;
@@ -198,13 +186,11 @@ void beginfunc(int vaccine)
    	/************************************************/
    	k=0;
 	if(ISModerateini > 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
 			aleat();
 			j = rn*L + 1;
-
 			if(Person[i][j].Health==S)
 			{
 				Person[i][j].Health = ISModerate;
@@ -221,8 +207,7 @@ void beginfunc(int vaccine)
   	/**************************************************/
   	k=0;
 	if(ISSevereini > 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
 			aleat();
@@ -243,8 +228,7 @@ void beginfunc(int vaccine)
   	/**************************************************/
   	k=0;
 	if(Recoveredini > 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
 			aleat();
@@ -262,24 +246,23 @@ void beginfunc(int vaccine)
   	/**************************************************/
   	k=0;
 	if(Vaccinatedini > 0 && vaccine != 0)
-		do
-		{
+		do{
 			aleat();
 			i = rn*L + 1;
 			aleat();
 			j = rn*L + 1;
 			if(Person[i][j].Health==S || Person[i][j].Health==E || Person[i][j].Health==Recovered)
-				if(vaccine!=0 && Person[i][j].AgeYears>=vaccineAgeMin && Person[i][j].IsVaccinated==0)
+				if(vaccine!=0 && Person[i][j].AgeYears>=vacCurrentMin && Person[i][j].IsVaccinated==0)
 				{
 					Person[i][j].Isolation = IsolationNo;
-					Vaccination(i, j, vaccine, 1);
+					VaccinationFunc(i, j, vaccine, 1, 1.);
 					//S_Total--;
 					New_Vac++;
 					k++;
 				}
 		}while(k < Vaccinatedini);    
-
   
+  	/**************************************************/
 	S_TotalTemp[Simulation][0]          = 1.0*S_Total/(1.0*N);
 	E_TotalTemp[Simulation][0]          = 1.0*E_Total/(1.0*N);               
 	IP_TotalTemp[Simulation][0]         = 1.0*IP_Total/(1.0*N);               
@@ -294,35 +277,34 @@ void beginfunc(int vaccine)
 	Dead_TotalTemp[Simulation][0]       = 1.0*Dead_Total/(1.0*N);        
 	Vac_TotalTemp[Simulation][0]        = 1.0*Vac_Total/(1.0*N);            
 	
-
-	New_S_Temp[Simulation][0]          = 1.0*New_S/(1.0*N);
-	New_E_Temp[Simulation][0]          = 1.0*New_E/(1.0*N);    
-	New_IP_Temp[Simulation][0]         = 1.0*New_IP/(1.0*N);           
-	New_IA_Temp[Simulation][0]         = 1.0*New_IA/(1.0*N);         
-	New_ISLight_Temp[Simulation][0]    = 1.0*New_ISLight/(1.0*N);  
-	New_ISModerate_Temp[Simulation][0] = 1.0*New_ISModerate/(1.0*N);  
-	New_ISSevere_Temp[Simulation][0]   = 1.0*New_ISSevere/(1.0*N);        
-	New_H_Temp[Simulation][0]          = 1.0*New_H/(1.0*N);                    
-	New_ICU_Temp[Simulation][0]        = 1.0*New_ICU/(1.0*N);           
-	New_Recovered_Temp[Simulation][0]  = 1.0*New_Recovered/(1.0*N);       
-	New_DeadCovid_Temp[Simulation][0]  = 1.0*New_DeadCovid/(1.0*N);       
-	New_Dead_Temp[Simulation][0]       = 1.0*New_Dead/(1.0*N);           
-	New_Vac_Temp[Simulation][0]        = 1.0*New_Vac/(1.0*N);             
+	New_S_Temp[Simulation][0]           = 1.0*New_S/(1.0*N);
+	New_E_Temp[Simulation][0]           = 1.0*New_E/(1.0*N);    
+	New_IP_Temp[Simulation][0]          = 1.0*New_IP/(1.0*N);           
+	New_IA_Temp[Simulation][0]          = 1.0*New_IA/(1.0*N);         
+	New_ISLight_Temp[Simulation][0]     = 1.0*New_ISLight/(1.0*N);  
+	New_ISModerate_Temp[Simulation][0]  = 1.0*New_ISModerate/(1.0*N);  
+	New_ISSevere_Temp[Simulation][0]    = 1.0*New_ISSevere/(1.0*N);        
+	New_H_Temp[Simulation][0]           = 1.0*New_H/(1.0*N);                    
+	New_ICU_Temp[Simulation][0]         = 1.0*New_ICU/(1.0*N);           
+	New_Recovered_Temp[Simulation][0]   = 1.0*New_Recovered/(1.0*N);       
+	New_DeadCovid_Temp[Simulation][0]   = 1.0*New_DeadCovid/(1.0*N);       
+	New_Dead_Temp[Simulation][0]        = 1.0*New_Dead/(1.0*N);           
+	New_Vac_Temp[Simulation][0]         = 1.0*New_Vac/(1.0*N);             
 
     
-	S_Sum[0]          += S_TotalTemp[Simulation][0];
-	E_Sum[0]          += E_TotalTemp[Simulation][0];    
-	IP_Sum[0]         += IP_TotalTemp[Simulation][0];           
-	IA_Sum[0]         += IA_TotalTemp[Simulation][0];         
-	ISLight_Sum[0]    += ISLight_TotalTemp[Simulation][0];      
-	ISModerate_Sum[0] += ISModerate_TotalTemp[Simulation][0];      
-	ISSevere_Sum[0]   += ISSevere_TotalTemp[Simulation][0];        
-	H_Sum[0]          += H_TotalTemp[Simulation][0];                
-	ICU_Sum[0]        += ICU_TotalTemp[Simulation][0];           
-	Recovered_Sum[0]  += Recovered_TotalTemp[Simulation][0];       
-	DeadCovid_Sum[0]  += DeadCovid_TotalTemp[Simulation][0];       
-	Dead_Sum[0]       += Dead_TotalTemp[Simulation][0];           
-	Vac_Sum[0]        += Vac_TotalTemp[Simulation][0];          
+	S_Sum[0]         	  += S_TotalTemp[Simulation][0];
+	E_Sum[0]         	  += E_TotalTemp[Simulation][0];    
+	IP_Sum[0]         	  += IP_TotalTemp[Simulation][0];           
+	IA_Sum[0]         	  += IA_TotalTemp[Simulation][0];         
+	ISLight_Sum[0]    	  += ISLight_TotalTemp[Simulation][0];      
+	ISModerate_Sum[0] 	  += ISModerate_TotalTemp[Simulation][0];      
+	ISSevere_Sum[0]  	  += ISSevere_TotalTemp[Simulation][0];        
+	H_Sum[0]         	  += H_TotalTemp[Simulation][0];                
+	ICU_Sum[0]       	  += ICU_TotalTemp[Simulation][0];           
+	Recovered_Sum[0]      += Recovered_TotalTemp[Simulation][0];       
+	DeadCovid_Sum[0]      += DeadCovid_TotalTemp[Simulation][0];       
+	Dead_Sum[0]           += Dead_TotalTemp[Simulation][0];           
+	Vac_Sum[0]            += Vac_TotalTemp[Simulation][0];          
              
 	New_S_Sum[0]          += New_S_Temp[Simulation][0];               
 	New_E_Sum[0]          += New_E_Temp[Simulation][0];      

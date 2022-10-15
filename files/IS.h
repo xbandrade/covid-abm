@@ -18,7 +18,7 @@ void ISfunc(int i, int j)
 			}
 			else
 			{
-				Neighborsinfectedfunc(i,j); // can still infect other people
+				NeighborsInfectedFunc(i,j); // can still infect other people
 				Person[i][j].Swap = IA;
 			}
 		}
@@ -42,7 +42,7 @@ void ISfunc(int i, int j)
 			}
 			else
 			{
-				Neighborsinfectedfunc(i,j);
+				NeighborsInfectedFunc(i,j);
 				Person[i][j].Swap = ISLight;
 			}
 		}
@@ -102,12 +102,11 @@ void ISfunc(int i, int j)
 					}
 					if(infProtection == 1)
 					{
-						//Person[i][j].Swap = ISModerate;
 						Person[i][j].Swap = Recovered;
 						New_Recovered++;
 					}
 				}
-				if(infProtection==0 && Person[i][j].Swap != Recovered) //else// gets severe COVID-19
+				if(infProtection==0 && Person[i][j].Swap != Recovered)
 				{
 					Person[i][j].Swap = ISSevere;
 					aleat();
@@ -117,7 +116,7 @@ void ISfunc(int i, int j)
 			}
 			else
 			{
-				Neighborsinfectedfunc(i,j);
+				NeighborsInfectedFunc(i,j);
 				Person[i][j].Swap = ISModerate;
 			}
 		} // end if (ISModerate)
@@ -177,7 +176,6 @@ void ISfunc(int i, int j)
 					}
 					if(infProtection == 1)
 					{
-						//Person[i][j].Swap = ISModerate;
 						Person[i][j].Swap = Recovered;
 						New_Recovered++;
 					}
@@ -189,14 +187,13 @@ void ISfunc(int i, int j)
 						AvailableBeds--;
 						Person[i][j].Swap = H;
 						aleat();
-						Person[i][j].StateTime = rn*(MaxH - MinH) + MinH; //time in hospital	
+						Person[i][j].StateTime = rn*(MaxH - MinH) + MinH; // time in hospital	
 						New_H++;		
 					}
-					else   // no beds available
+					else // no beds available
 					{
 						Person[i][j].Swap = DeadCovid;
 						New_DeadCovid++;
-						//New_HDead++;
 					}
 				} // not recovered
 			}

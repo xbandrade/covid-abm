@@ -1,23 +1,21 @@
-void Isolationfunc()
+void IsolationFunc()
 {
-	int mute;
-	int Randomi;
-	int Randomj;
+	int aux;
+	int ri, rj; // random i, random j
 	int cont = 0;
 
-	mute = 0;
+	aux = 0;
 	do{
 		cont++;
 		aleat();
-		Randomi = rn*L + 1;
-		
+		ri = rn*L + 1;
 		aleat();
-		Randomj = rn*L + 1;
+		rj = rn*L + 1;
        
-		if(Person[Randomi][Randomj].Isolation==IsolationNo && (Person[Randomi][Randomj].Health!=H || Person[Randomi][Randomj].Health!=ICU))
+		if(Person[ri][rj].Isolation==IsolationNo && (Person[ri][rj].Health!=H || Person[ri][rj].Health!=ICU))
 		{
-			Person[Randomi][Randomj].Isolation = IsolationYes;
-			mute++;
+			Person[ri][rj].Isolation = IsolationYes;
+			aux++;
 		}    
-	}while(mute < MaximumIsolated && cont < MaximumIsolated*10); // avoid infinite loops
+	}while(aux < MaximumIsolated && cont < MaximumIsolated*10); // avoid infinite loops
 }

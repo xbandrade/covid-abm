@@ -21,7 +21,8 @@ Sinopharm           - 73%           - 68%
 */
 
 // Vaccine id for Person[i][j].IsVaccinated
-// 0 // no vaccine
+
+//         0 // no vaccine
 #define AZ 1 // AstraZeneca
 #define CV 2 // CoronaVac
 #define CX 3 // Covaxin
@@ -31,7 +32,7 @@ Sinopharm           - 73%           - 68%
 #define SP 7 // Sinopharm
 #define BR 8 // Vaccines received in Brazil
 
-// Vaccine effectiveness against severe COVID-19
+// Vaccine efficacy against severe COVID-19
 #define AZ_Eff_S .94 // 
 #define CV_Eff_S .50 //
 #define CX_Eff_S .78
@@ -40,7 +41,7 @@ Sinopharm           - 73%           - 68%
 #define PF_Eff_S .95
 #define SP_Eff_S .73
 
-// Vaccine effectiveness against COVID-19 infection
+// Vaccine efficacy against COVID-19 infection
 #define AZ_Eff_I .63 // 
 #define CV_Eff_I .47
 #define CX_Eff_I .73
@@ -61,9 +62,6 @@ Sinopharm           - 73%           - 68%
 #define R2 (R1+JJ_Rec)     // .555 - .635  -> JJ
 //#define R3 1.            // .635 -   1   -> PF
 
-//#define DAILY_VACCINATION .05
-//#define PERC_VACCINATION  .85 //
-//#define BEGIN_VACCINATION  0 //
 #define DAYS_LOWER_AGE     1 // days to lower min age for vaccination
 #define LOWER_MIN_AGE      3 // lowers min age in <LOWER_MIN_AGE> years every <DAYS_LOWER_AGE> days
 #define VACCINE_AGE_MIN    5  

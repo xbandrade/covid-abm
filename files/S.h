@@ -7,7 +7,7 @@ void Sfunc(int i, int j)
 	}
 	else
 	{
-		Neighborsfunc(i, j);
+		NeighborsFunc(i, j);
 		if(Contagion==1)   
 		{
 			Person[i][j].Checked = 1; 

@@ -92,7 +92,6 @@ void IPfunc(int i, int j)
 					else // protected from severe disease by vaccine - goes to light COVID instead
 					{
 						Person[i][j].Swap = ISLight;
-						//Person[i][j].Swap = S;
 						aleat();
 						Person[i][j].StateTime = rn*(MaxISLight - MinISLight) + MinISLight; //time on state ISLight
 						New_ISLight++;	
@@ -102,7 +101,7 @@ void IPfunc(int i, int j)
 		}
 		else
 		{
-			Neighborsinfectedfunc(i,j);
+			NeighborsInfectedFunc(i,j);
 			Person[i][j].Swap = IP;
 		}
 	}

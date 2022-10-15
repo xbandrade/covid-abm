@@ -29,9 +29,8 @@ void Hfunc(int i, int j)
 					Person[i][j].StateTime = rn*(MaxICU - MinICU) + MinICU; // time on state ICU
 					New_ICU++;
 				}
-				else   // no beds available
+				else // no beds available
 				{
-					//HDead++;
 					Person[i][j].Swap = DeadCovid;
 					AvailableBeds++;
 					New_DeadCovid++;

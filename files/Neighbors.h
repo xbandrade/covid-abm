@@ -1,54 +1,48 @@
-int Neighborsfunc(int i , int j)
+int NeighborsFunc(int i , int j)
 {
-
 	int k, l, m, n;         
-	int KI; /* counter for infected individuals in the neighborhood */
-	int RandomContacts;
-	int Randomi;
-	int Randomj;
-	int mute;
-	double ProbContagion;
+	int infectedCount; // counter for infected individuals in the neighborhood
+	int rContacts;     // random contacts
+	int ri, rj;        // random i, random j
+	int aux;
+	double probContagion;
 	double effVac;
+	infectedCount = 0;
 	Contagion = 0;
-	KI = 0;
 
 	if(Person[i][j].Isolation==IsolationNo) // isolation only for random contacts
 	{
 		aleat();
-		RandomContacts = rn*(MaxRandomContacts - MinRandomContacts) +  MinRandomContacts;	
-		mute = 0; /* Check random contacts */
+		rContacts = rn*(MaxRandomContacts - MinRandomContacts) +  MinRandomContacts;	
+		aux = 0; /* Check random contacts */
 
-		if(RandomContacts > 0)
-		do
-		{
-			do
-			{
+		if(rContacts > 0)
+		do{
+			do{
 				aleat();
-				Randomi = rn*L + 1;
-			}while(Randomi==i);
-			do
-			{
+				ri = rn*L + 1;
+			}while(ri==i);
+			do{
 				aleat();
-				Randomj = rn*L + 1;
-			}while(Randomj==j); // random agent
-		
-			if(Person[Randomi][Randomj].Health==IP || Person[Randomi][Randomj].Health==ISLight || Person[Randomi][Randomj].Health==ISModerate  ||
-				Person[Randomi][Randomj].Health==ISSevere  || Person[Randomi][Randomj].Health==IA || Person[Randomi][Randomj].Health==H || Person[Randomi][Randomj].Health==ICU)
-				KI++;  // infectious random agent
-					
-			mute++;
-		}while(mute < RandomContacts);
+				rj = rn*L + 1;
+			}while(rj==j); // random agent
+			if(Person[ri][rj].Health==IP || Person[ri][rj].Health==ISLight || Person[ri][rj].Health==ISModerate ||
+			   Person[ri][rj].Health==ISSevere  || Person[ri][rj].Health==IA || Person[ri][rj].Health==H || Person[ri][rj].Health==ICU)
+				infectedCount++;  // infectious random agent
+			aux++;
+		}while(aux < rContacts);
 	}
 
 	/* Check 8 neighbors in the lattice */    
 		for(k=-1;k<=1;k++) 	
 			for(l=-1;l<=1;l++)
-				if(Person[i+k][j+l].Health==IP || Person[i+k][j+l].Health==ISLight || Person[i+k][j+l].Health==ISModerate || Person[i+k][j+l].Health==ISSevere  ||
-					Person[i+k][j+l].Health==IA || Person[i+k][j+l].Health==H || Person[i+k][j+l].Health==ICU)
-					KI++;
+				if(Person[i+k][j+l].Health==IP || Person[i+k][j+l].Health==ISLight || Person[i+k][j+l].Health==ISModerate || 
+				   Person[i+k][j+l].Health==ISSevere || Person[i+k][j+l].Health==IA || 
+				   Person[i+k][j+l].Health==H || Person[i+k][j+l].Health==ICU)
+					infectedCount++;
 
 
-	if(KI > 0) // Calculate ProbContagion
+	if(infectedCount > 0) // Calculate probContagion
 	{
 		switch(Person[i][j].IsVaccinated)
 		{
@@ -81,17 +75,17 @@ int Neighborsfunc(int i , int j)
 				effVac = -2.0;
 				break;
 		}
-		ProbContagion = (1 - effVac)*(1.0 - pow(1.0 - Beta,(double)KI));
+		probContagion = (1 - effVac)*(1.0 - pow(1.0 - BETA,(double)infectedCount));
 	}
 	else
-		ProbContagion = 0.0;
+		probContagion = 0.0;
 
-	if(KI==0)
+	if(infectedCount==0)
 		Contagion = 0; // No contagion
 	else
 	{
 		aleat();
-		if(rn<=ProbContagion)
+		if(rn<=probContagion)
 			Contagion = 1;
 		else
 			Contagion = 0;
