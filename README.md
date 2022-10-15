@@ -13,7 +13,8 @@ Modelo implementado usando a linguagem C e paralelizado com MPI.
 
 <br/>
 
-➡️**mpirun -np (númeroDeProcessos) ./covid.x (vacina) (isolamentoSocial) (proporçãoIsolamento) (inícioIsolamento) (porcentagemVacinação) (inícioVacinação)**
+
+➡️**make clean; make; mpirun -np (númeroDeProcessos) ./covid.x (vacina) (isolamentoSocial) (proporçãoIsolamento) (inícioIsolamento) (porcentagemVacinação) (inícioVacinação)**
 
 > - vacina: 0 - Sem Vacinação; 1 - AstraZeneca; 2 - CoronaVac; 4 - Janssen; 6 - Pfizer; 8 - Conjunto de vacinas usadas no Brasil
 > - isolamentoSocial: 0 - Sem isolamento social; 1 - Com isolamento social
@@ -21,5 +22,3 @@ Modelo implementado usando a linguagem C e paralelizado com MPI.
 > - inícioIsolamento: [0-400] - Dias até o início do isolamento social
 > - porcentagemVacinação: [0-1] - Porcentagem da população elegível que segue as recomendações de vacinação
 > - inícioVacinação: [0-400] - Dias até o início da vacinação
-
-
