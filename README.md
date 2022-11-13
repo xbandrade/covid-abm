@@ -18,7 +18,7 @@ Modelo implementado usando a linguagem C e paralelizado com MPI.
 
 > - vacina: 0 - Sem Vacinação; 1 - AstraZeneca; 2 - CoronaVac; 4 - Janssen; 6 - Pfizer; 8 - Conjunto de vacinas usadas no Brasil
 > - isolamentoSocial: 0 - Sem isolamento social; 1 - Com isolamento social
-> - proporçãoIsolamento: [0-1] - Porcentagem da população que segue as medidas de isolamento
+> - proporçãoIsolamento: [0-100] - Porcentagem da população que segue as medidas de isolamento
 > - inícioIsolamento: [0-400] - Dias até o início do isolamento social
-> - porcentagemVacinação: [0-1] - Porcentagem da população elegível que segue as recomendações de vacinação
+> - porcentagemVacinação: [0-100] - Porcentagem da população elegível que segue as recomendações de vacinação
 > - inícioVacinação: [0-400] - Dias até o início da vacinação
