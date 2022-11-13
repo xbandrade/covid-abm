@@ -10,7 +10,6 @@
 #include "files/define.h"
 #include "files/vaccines.h"
 
-
 struct Individual{
 	int Health;        // host health state
 	int Swap;          // host health state to update lattice
@@ -206,7 +205,6 @@ int NumberOfHospitalBeds;
 int NumberOfICUBeds;
 
 //////////////////////////////////////////////////////////
-
 // Random Number Generator
 
 unsigned R;
@@ -245,7 +243,7 @@ int main(int argc, char *argv[])
     int seed, master, ierr, size, rank;	// MPI variables
 	int start, end, step, tag=1;  		// MPI variables
 	int timeSim;
-	int vaccine;  // 0 - no vaccination
+	int vaccine;                  // 0 - no vaccination
 	int isolationState;           // 0 - Isolation off, 1 - Isolation on 
 	int startOfIsolation;         // [0-400] days
 	int startOfVaccination;    	  // [0-400] days
@@ -270,9 +268,9 @@ int main(int argc, char *argv[])
 
 	vaccine = atoi(argv[1]); // gets vaccine from command line arguments
 	isolationState = atoi(argv[2]);
-	proportionIsolated = atof(argv[3]);
+	proportionIsolated = atof(argv[3])/100;
 	startOfIsolation = atoi(argv[4]);
-	percentageVaccination = atof(argv[5]);
+	percentageVaccination = atof(argv[5])/100;
 	startOfVaccination = atoi(argv[6]);
 
 	master = 0;

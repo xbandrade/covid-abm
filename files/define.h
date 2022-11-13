@@ -31,7 +31,7 @@
 #define AverageOcupationRateBeds    0.4     // average ocupation rate of hospital beds due to others diseases
 #define AverageOcupationRateBedsICU 0.4     // average ocupation rate of hospital beds due to others diseases
 #define DAYS 400                            // Number of days simulated 
-#define MAXSIM 96                           // Number of simulations to evaluate averages 
+#define MAXSIM 100                          // Number of simulations to evaluate averages 
 
 /* Population parameters - Initialization values */
 #define  Eini                0
