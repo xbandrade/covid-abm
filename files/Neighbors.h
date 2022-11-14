@@ -1,4 +1,4 @@
-int NeighborsFunc(int i , int j)
+int NeighborsFunc(int i, int j)
 {
 	int k, l, m, n;         
 	int infectedCount; // counter for infected individuals in the neighborhood
@@ -33,14 +33,15 @@ int NeighborsFunc(int i , int j)
 		}while(aux < rContacts);
 	}
 
-	/* Check 8 neighbors in the lattice */    
-		for(k=-1;k<=1;k++) 	
-			for(l=-1;l<=1;l++)
-				if(Person[i+k][j+l].Health==IP || Person[i+k][j+l].Health==ISLight || Person[i+k][j+l].Health==ISModerate || 
-				   Person[i+k][j+l].Health==ISSevere || Person[i+k][j+l].Health==IA || 
-				   Person[i+k][j+l].Health==H || Person[i+k][j+l].Health==ICU)
-					infectedCount++;
-
+	/* Check neighbors in the lattice */  
+	if(Person[i-1][j].Health==IP || Person[i-1][j].Health==ISLight || Person[i-1][j].Health==ISModerate || Person[i-1][j].Health==ISSevere  || Person[i-1][j].Health==IA || Person[i-1][j].Health==H || Person[i-1][j].Health==ICU)
+		infectedCount++;
+	if(Person[i+1][j].Health==IP || Person[i+1][j].Health==ISLight || Person[i+1][j].Health==ISModerate || Person[i+1][j].Health==ISSevere  || Person[i+1][j].Health==IA || Person[i+1][j].Health==H || Person[i+1][j].Health==ICU)
+		infectedCount++;
+	if(Person[i][j-1].Health==IP || Person[i][j-1].Health==ISLight || Person[i][j-1].Health==ISModerate || Person[i][j-1].Health==ISSevere  || Person[i][j-1].Health==IA  || Person[i][j-1].Health==H  || Person[i][j-1].Health==ICU)
+		infectedCount++;
+	if(Person[i][j+1].Health==IP || Person[i][j+1].Health==ISLight || Person[i][j+1].Health==ISModerate || Person[i][j+1].Health==ISSevere  || Person[i][j+1].Health==IA || Person[i][j+1].Health==H || Person[i][j+1].Health==ICU)
+		infectedCount++;
 
 	if(infectedCount > 0) // Calculate probContagion
 	{

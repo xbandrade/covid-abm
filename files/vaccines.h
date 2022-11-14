@@ -63,5 +63,5 @@ Sinopharm           - 73%           - 68%
 //#define R3 1.            // .635 -   1   -> PF
 
 #define DAYS_LOWER_AGE     1 // days to lower min age for vaccination
-#define LOWER_MIN_AGE      3 // lowers min age in <LOWER_MIN_AGE> years every <DAYS_LOWER_AGE> days
+#define LOWER_MIN_AGE      3 // lowers min age in LOWER_MIN_AGE years every DAYS_LOWER_AGE days
 #define VACCINE_AGE_MIN    5  

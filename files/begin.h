@@ -1,4 +1,4 @@
-void BeginFunc(int vaccine, int vacCurrentMin)
+void BeginFunc(int vaccine)
 {
 	int i, j, k;
 	int aux;
@@ -252,7 +252,7 @@ void BeginFunc(int vaccine, int vacCurrentMin)
 			aleat();
 			j = rn*L + 1;
 			if(Person[i][j].Health==S || Person[i][j].Health==E || Person[i][j].Health==Recovered)
-				if(vaccine!=0 && Person[i][j].AgeYears>=vacCurrentMin && Person[i][j].IsVaccinated==0)
+				if(vaccine!=0 && Person[i][j].IsVaccinated==0)
 				{
 					Person[i][j].Isolation = IsolationNo;
 					VaccinationFunc(i, j, vaccine, 1, 1.);

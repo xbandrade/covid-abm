@@ -422,7 +422,7 @@ int main(int argc, char *argv[])
 	#endif
 
 	// Isolation
-	if(isolationState==ON)
+	if(isolationState==1)
 		MaximumIsolated = proportionIsolated*N;	
 	else
 		MaximumIsolated = 0;
@@ -439,7 +439,7 @@ int main(int argc, char *argv[])
 		vacCurrentMin = 90;
 
 		//printf("Rank %d - Sim %d - R = %u\n", rank, Simulation, R);
-		BeginFunc(vaccine, vacCurrentMin);
+		BeginFunc(vaccine);
 		CountDays = 0;
 
 		/************************************************/

@@ -31,7 +31,7 @@
 #define AverageOcupationRateBeds    0.4     // average ocupation rate of hospital beds due to others diseases
 #define AverageOcupationRateBedsICU 0.4     // average ocupation rate of hospital beds due to others diseases
 #define DAYS 400                            // Number of days simulated 
-#define MAXSIM 100                          // Number of simulations to evaluate averages 
+#define MAXSIM 96                           // Number of simulations to evaluate averages 
 
 /* Population parameters - Initialization values */
 #define  Eini                0
@@ -63,7 +63,7 @@
 /* Probs of Recovery < 60 */
 #define ProbRecoveryModerateYounger 0.6
 #define ProbRecoverySevereYounger 0.01
-#define ProbRecoveryHYounger 1.0
+#define ProbRecoveryHYounger 0.99
 #define ProbRecoveryICUYounger 0.5
 
 /* Probs Recovery ISModerate for Elderly */
@@ -94,31 +94,31 @@
 #define ProbRecoveryICU_80_90 0.10417
 #define ProbRecoveryICU_Greater90 0.08333
 
-/* Time on states */
-#define MinLatency 2.0    // days
-#define MaxLatency 14.0   // days
-
-#define MinIA 2.5   
-#define MaxIA 10.0 
+/*  Periods on states */
+#define MinLatency 2.5           // days
+#define MaxLatency 12          // days
 
 #define MinIP 2.5  
 #define MaxIP 10.5 
+
+#define MinIA 2.5   
+#define MaxIA 7.0 
 
 #define MinISLight 2.5 
 #define MaxISLight 14.5
 
 #define MinISModerate 2.5 
-#define MaxISModerate 14.5 
+#define MaxISModerate 21.5 
 
-// ref: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7589278/#:~:text=The%20time%20between%20symptom%20onset,a%20nursing%20home%20(additional%202
+// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7589278/#:~:text=The%20time%20between%20symptom%20onset,a%20nursing%20home%20(additional%202
 #define MinISSevere 3.0          // days
-#define MaxISSevere 10.4         // days
+#define MaxISSevere 7.4         // days
 
-// ref: https://www.cdc.gov/coronavirus/2019-ncov/hcp/clinical-guidance-management-patients.html
+// https://www.cdc.gov/coronavirus/2019-ncov/hcp/clinical-guidance-management-patients.html
 #define MinH 3.0
 #define MaxH 13.0
 
-// ref: https://bmcinfectdis.biomedcentral.com/articles/10.1186/s12879-021-06371-6#:~:text=ICU%20admission%20was%20estimated%20to,18.9%20days%20in%20critical%20care.
+// https://bmcinfectdis.biomedcentral.com/articles/10.1186/s12879-021-06371-6#:~:text=ICU%20admission%20was%20estimated%20to,18.9%20days%20in%20critical%20care.
 #define MinICU 8.4
 #define MaxICU 16.4
 

@@ -3,3 +3,5 @@
 *.csv
 *.out
 iso*
+new*
+test.sh

@@ -16,7 +16,7 @@ void UpdateFunc(int timeSim, int isolationState, double proportionIsolated, int 
     for(i=1;i<=L;i++) 
     	for(j=1;j<=L;j++)
 		{
-			Person[i][j].Health   = Person[i][j].Swap;   // Update the lattice
+			Person[i][j].Health   = Person[i][j].Swap; // Update the lattice
 			Person[i][j].Exponent = 0;
 			Person[i][j].Checked  = 0; 
 			Person[i][j].AgeDays++;
@@ -60,7 +60,7 @@ void UpdateFunc(int timeSim, int isolationState, double proportionIsolated, int 
 				}while(aux<1);
 				Person[i][j].AgeDeathDays = Person[i][j].AgeDeathYears*365;
 			
-				if(Person[i][j].AgeDeathYears < Person[i][j].AgeYears)
+				if(Person[i][j].AgeDeathYears < Person[i][j].AgeYears)  // fix this
 				{
 					aux = Person[i][j].AgeDeathYears;
 					Person[i][j].AgeYears = Person[i][j].AgeDeathYears;
