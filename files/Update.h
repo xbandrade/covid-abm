@@ -60,12 +60,13 @@ void UpdateFunc(int timeSim, int isolationState, double proportionIsolated, int 
 				}while(aux<1);
 				Person[i][j].AgeDeathDays = Person[i][j].AgeDeathYears*365;
 			
-				if(Person[i][j].AgeDeathYears < Person[i][j].AgeYears)  // fix this
+				if(Person[i][j].AgeDeathYears < Person[i][j].AgeYears)
 				{
-					aux = Person[i][j].AgeDeathYears;
+					aux = Person[i][j].AgeYears;
 					Person[i][j].AgeYears = Person[i][j].AgeDeathYears;
 					Person[i][j].AgeDeathYears = aux;
 					Person[i][j].AgeDeathDays = Person[i][j].AgeDeathYears*365;
+					Person[i][j].AgeDays = Person[i][j].AgeYears*365;
 				}
 				New_S++;
 			}
