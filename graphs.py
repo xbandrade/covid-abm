@@ -5,31 +5,40 @@ import matplotlib.pyplot as plt
 
 
 def plot():
-    s = 0
-    iso = 0
+    vac = 85  # percentage vaccinated
+    v = 8  # vaccine
+    s = 1  # state
+    irange = range(0, 101, 5)
     state = ['Infectious', 'Hospitalized', 'Vaccinated']
-    df = [pd.read_csv(f'newsim/i{str(iso)}/v{str(v)}/epiPrevBR.csv') for v in (0, 50, 75, 85, 95)]
+    df = [pd.read_csv(f'newsim/v{str(v)}-{vac}/i{str(iso)}/epiPrev.csv') for iso in irange]
     t = df[0]['Time'].to_numpy()
     inf = [d[state[s]].to_numpy() for d in df]
-    labels = ['00', '50', '75', '85', '95']
+    labels = list(map(str, irange))
     fig, ax = plt.subplots(1, 1, figsize=(8.8, 5.7))
     ax.grid()
     ax.set_xlim(0, 400)
-    if s == 0:
-        ax.set_ylim(0, .28)
-        plt.yticks(np.arange(0, .28, .04))
+    # if s == 0:
+    #     ax.set_ylim(0, .28)
+    #     plt.yticks(np.arange(0, .28, .04))
     for i, x in enumerate(inf):
         ax.plot(t, x, label=labels[i])
-    ax.legend()
+    ax.legend(bbox_to_anchor=(1.15, 1), loc='upper right')
+    plt.tight_layout()
     plt.show()
 
-def iso_csv():
-    df = [pd.read_csv(f'iso0days/results{iso}/epiPrevBR.csv') for iso in range(100, -1, -5)]
-    inf = [d['Infectious'].to_numpy() for d in df]
+def heatmap():
+    vac = 85  # percentage vaccinated
+    v = 6  # vaccine
+    vac_d = {0: 'No Vaccination', 1: 'AstraZeneca', 2: 'CoronaVac', 4: 'Janssen', 6: 'Pfizer', 8: 'BR Vaccines'}
+    s = 0  # state
+    state = ['Infectious', 'Hospitalized', 'Vaccinated']
+    irange = range(100, -1, -5)
+    df = [pd.read_csv(f'newsim/v{str(v)}-{vac}/i{str(iso)}/epiPrev.csv') for iso in irange]
+    inf = [d[state[s]].to_numpy() for d in df]
     titles = [f'{i}%' for i in range(100, -1, -5)]
     inf = pd.DataFrame(inf, titles)
     sns.heatmap(inf)
-    plt.title('$P_{vac}=0.85$')
+    plt.title(f'$P_{{vac}}=0.85$ - {vac_d[v]}')
     plt.xlabel('Time(days)')
     plt.ylabel('$P_{iso}$')
     plt.tight_layout()
@@ -37,8 +46,8 @@ def iso_csv():
 
 
 def main():
-    # iso_csv()
-    plot()  # testing
+    # heatmap()
+    plot()  # normal_plot
     
 
 if __name__ == '__main__':

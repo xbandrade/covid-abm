@@ -221,7 +221,7 @@ double aleat()
 #include "files/death.h"
 #include "files/agestructure.h"
 #include "files/recovery.h"
-#include "files/neighbors.h"
+#include "files/Neighbors.h"
 #include "files/neighbors_infected.h"
 #include "files/S.h"
 #include "files/E.h"                                                              
@@ -414,8 +414,8 @@ int main(int argc, char *argv[])
 	#else // Density == BRAZIL
 	{
 		// ref: https://www.gove.digital/wp-content/uploads/2020/03/Leitos.pdf
-		MaxRandomContacts = 3.0;
-		MinRandomContacts = 0.0;
+		MaxRandomContacts = 5.5;
+		MinRandomContacts = 1.5;
 		NumberOfHospitalBeds = 836;  
 		NumberOfICUBeds      = 69;
 	}
@@ -516,7 +516,7 @@ int main(int argc, char *argv[])
 			}
 			UpdateFunc(timeSim, isolationState, proportionIsolated, startOfIsolation);   /* Update lattice */
 		}
-		printf(">Rank %d - Sim %d done\n", rank, Simulation);
+		// printf(">Rank %d - Sim %d done\n", rank, Simulation);
     }
     
 	// Prevalence headers
@@ -601,7 +601,7 @@ int main(int argc, char *argv[])
 		}
 		t2 = MPI_Wtime();
 		printf("\nElapsed time: %f seconds\n", t2 - t1);
-		printf("Done!\n\n");
+		// printf("Done!\n\n");
 	}
     MPI_Finalize(); 
     return 0;
