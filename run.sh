@@ -7,7 +7,7 @@
 make clean
 make
 
-<<com
+# sim 1 - vac% = 85, iso = [0, 100, 5]
 vac=85
 for v in 0 1 2 4 6 8
 do
@@ -15,10 +15,6 @@ do
     do
         mkdir -p results
         mkdir -p newsim/v$v-$vac/
-        # if [ $vac -gt 0 ]
-        # then
-        #     v=8
-        # fi
         mpirun -np 8 ./covid.x $v 1 $iso 0 $vac 0
         mv InfPrevalence.csv results/infPrev.csv
         mv epidemicsprevalence.csv results/epiPrev.csv
@@ -30,6 +26,7 @@ do
     done
 done
 
+# sim 2 - iso% = 0, 50%, vac = [0, 100, 5]
 for iso in 0 50
 do
     for v in 0 1 2 4 6 8
@@ -50,8 +47,8 @@ do
         done
     done
 done
-com
 
+# sim 3 - vac% = 0, 25, 50, 75, 100%, iso = [0, 100, 5]
 for v in 0 1 2 4 6 8
 do
     for vac in 0 25 50 75 100
