@@ -2,5 +2,8 @@
 *.x
 *.csv
 *.out
-new*
+*.gz
+*.zip
 heat*
+new*
+temp*

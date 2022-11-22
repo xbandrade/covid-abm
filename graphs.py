@@ -29,6 +29,23 @@ def plot():
     plt.show()
 
 
+def interpolate(dt, yrange):
+    new_dt = []
+    counter = 0
+    for i in range(100, -1, -1):
+        if i in yrange:
+            new_dt.append(dt[counter])
+            counter += 1
+        else:
+            new_dt.append([])
+    for i in range(100, -1, -1):
+        if i % 5 == 0 and i > 0:
+            diff = [(new_dt[i - 5][k] - new_dt[i][k])/5 for k in range(401)]
+        else:
+            new_dt[i] = [new_dt[i + 1][k] + diff[k] for k in range(401)]
+    return new_dt
+
+
 def heatmap(v, p, sim):
     s = 1 if sim == 3 else 0
     fig, ax = plt.subplots(1, 1, figsize=(8.8, 5.7))
@@ -41,32 +58,41 @@ def heatmap(v, p, sim):
         df = [pd.read_csv(f'newsim2/i{p}/v{v}/v{vac}/epiPrev.csv') for vac in yrange]
     else:
         df = [pd.read_csv(f'newsim3/v{v}/{p}/i{iso}/epiPrev.csv') for iso in yrange]
-    inf = [d[state[s]].to_numpy() for d in df]
-    titles = [f'{i}' for i in range(100, -1, -5)]
+    inf = interpolate([d[state[s]].to_numpy() for d in df], yrange)
+    max_val = max(np.asmatrix(d).max() for d in inf)
+    titles = [f'{i}' for i in range(100, -1, -1)]
     inf = pd.DataFrame(inf, titles)
     sns.heatmap(inf, cmap='flare_r')
     ax.set_xticks(np.arange(0, 401, 50))
+    ax.set_yticks(np.arange(100, -1, -5))
     ax.set_xticklabels((c for c in np.arange(0, 401, 50)), rotation=0)
+    ax.set_yticklabels((c for c in np.arange(0, 101, 5)))
     ax.set_xlabel('Time(days)')
     cbar = ax.collections[0].colorbar
+    cbar.set_ticks(np.linspace(0, max_val, 10))
     cticks = [float(t.get_text().replace('−','-')) for t in cbar.ax.get_yticklabels()]
     if sim == 1:
+        cbar.set_label('Infectious Population (%)')
         cbar.ax.set_yticklabels(map(lambda s: f'{round(s*100, 1)}%', cticks))
         plt.title(f'$P_{{vac}}={p}\%$ - {vac_d[v]}')
         plt.ylabel('$P_{iso} (\%)$')
         plt.tight_layout()
         plt.savefig(f'heatmaps/sim1/v{v}_v{p}.png')
     elif sim == 2:
+        cbar.set_label('Infectious Population (%)')
         cbar.ax.set_yticklabels(map(lambda s: f'{round(s*100, 1)}%', cticks))
         plt.title(f'$P_{{iso}}={p}\%$ - {vac_d[v]}')
         plt.ylabel('$P_{vac} (\%)$')
         plt.tight_layout()
         plt.savefig(f'heatmaps/sim2/v{v}_i{p}.png')
     else:  # 0.1255808364
+        cbar.set_label('Hospital Bed Occupancy (%)')
         if v == 6 and p == 100:
-            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s * 1e-5 / 0.001255808364, 1)}%', cticks))
+            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s * 1e-5 / 0.001255808364, 1)}%'
+                                    if round(100 * s * 1e-5 / 0.001255808364, 1) < 99.7 else '100%', cticks))
         else:
-            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s / 0.001255808364, 1)}%', cticks))
+            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s / 0.001255808364, 1)}%'
+                                    if round(100 * s / 0.001255808364, 1) < 99.7 else '100%', cticks))
         plt.title(f'$P_{{vac}}={p}\%$ - {vac_d[v]}')
         plt.ylabel('$P_{iso} (\%)$')
         plt.tight_layout()
