@@ -19,9 +19,6 @@ def plot():
     fig, ax = plt.subplots(1, 1, figsize=(8.8, 5.7))
     ax.grid()
     ax.set_xlim(0, 400)
-    # if s == 0:
-    #     ax.set_ylim(0, .28)
-    #     plt.yticks(np.arange(0, .28, .04))
     for i, x in enumerate(inf):
         ax.plot(t, x, label=labels[i])
     ax.legend(bbox_to_anchor=(1.15, 1), loc='upper right')
@@ -32,6 +29,7 @@ def plot():
 def interpolate(dt, yrange):
     new_dt = []
     counter = 0
+    diff = [0]
     for i in range(100, -1, -1):
         if i in yrange:
             new_dt.append(dt[counter])
@@ -64,37 +62,37 @@ def heatmap(v, p, sim):
     inf = pd.DataFrame(inf, titles)
     sns.heatmap(inf, cmap='flare_r')
     ax.set_xticks(np.arange(0, 401, 50))
-    ax.set_yticks(np.arange(100, -1, -5))
+    ax.set_yticks(np.arange(100, -1, -10))
     ax.set_xticklabels((c for c in np.arange(0, 401, 50)), rotation=0)
-    ax.set_yticklabels((c for c in np.arange(0, 101, 5)))
-    ax.set_xlabel('Time(days)')
-    cbar = ax.collections[0].colorbar
+    ax.set_yticklabels((c for c in np.arange(0, 101, 10)))
+    ax.set_xlabel('Time(days)', fontsize=16)
+    cbar = ax.collections[-1].colorbar  # type: ignore
     cbar.set_ticks(np.linspace(0, max_val, 10))
     cticks = [float(t.get_text().replace('−','-')) for t in cbar.ax.get_yticklabels()]
     if sim == 1:
         cbar.set_label('Infectious Population (%)')
-        cbar.ax.set_yticklabels(map(lambda s: f'{round(s*100, 1)}%', cticks))
-        plt.title(f'$P_{{vac}}={p}\%$ - {vac_d[v]}')
-        plt.ylabel('$P_{iso} (\%)$')
+        cbar.ax.set_yticklabels(map(lambda s: f'{round(s*100, 1)}', cticks))
+        # plt.title(fr'$P_{{vac}}={p}\%$ - {vac_d[v]}')
+        plt.ylabel(r'$P_{iso} (\%)$', fontsize=15)
         plt.tight_layout()
         plt.savefig(f'heatmaps/sim1/v{v}_v{p}.png')
     elif sim == 2:
         cbar.set_label('Infectious Population (%)')
-        cbar.ax.set_yticklabels(map(lambda s: f'{round(s*100, 1)}%', cticks))
-        plt.title(f'$P_{{iso}}={p}\%$ - {vac_d[v]}')
-        plt.ylabel('$P_{vac} (\%)$')
+        cbar.ax.set_yticklabels(map(lambda s: f'{round(s*100, 1)}', cticks))
+        # plt.title(fr'$P_{{iso}}={p}\%$ - {vac_d[v]}')
+        plt.ylabel(r'$P_{vac} (\%)$', fontsize=15)
         plt.tight_layout()
         plt.savefig(f'heatmaps/sim2/v{v}_i{p}.png')
     else:  # 0.1255808364
         cbar.set_label('Hospital Bed Occupancy (%)')
         if v == 6 and p == 100:
-            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s * 1e-5 / 0.001255808364, 1)}%'
-                                    if round(100 * s * 1e-5 / 0.001255808364, 1) < 99.7 else '100%', cticks))
+            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s * 1e-5 / 0.001255808364, 1)}'
+                                    if round(100 * s * 1e-5 / 0.001255808364, 1) < 99.7 else '100', cticks))
         else:
-            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s / 0.001255808364, 1)}%'
-                                    if round(100 * s / 0.001255808364, 1) < 99.7 else '100%', cticks))
-        plt.title(f'$P_{{vac}}={p}\%$ - {vac_d[v]}')
-        plt.ylabel('$P_{iso} (\%)$')
+            cbar.ax.set_yticklabels(map(lambda s: f'{round(100 * s / 0.001255808364, 1)}'
+                                    if round(100 * s / 0.001255808364, 1) < 99.7 else '100', cticks))
+        # plt.title(fr'$P_{{vac}}={p}\%$ - {vac_d[v]}')
+        plt.ylabel(r'$P_{iso} (\%)$', fontsize=15)
         plt.tight_layout()
         plt.savefig(f'heatmaps/sim3/Hv{v}_v{p}.png')
     # plt.show()
@@ -103,8 +101,9 @@ def heatmap(v, p, sim):
 def main():
     # plot()  # normal_plot
     vac = 85
-    params = {'mathtext.default': 'regular' }     
-    plt.rcParams["font.family"] = "courier new"     
+    params = {'mathtext.default': 'regular'}     
+    font = {'family': 'courier new', 'size': 14.5}
+    plt.rc('font', **font)
     plt.rcParams.update(params)
     # Sim 1
     for v in (0, 1, 2, 4, 6, 8):
