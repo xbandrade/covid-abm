@@ -1,4 +1,4 @@
-# covidABM
+# Covid ABM
 ### Trabalho de Conclusão de Curso de Física Computacional
 
 Autor: Bruno Silva de Andrade
@@ -9,7 +9,7 @@ Orientador: Dr. Aquino Lauri de Espíndola
 
 Modelo baseado em agentes para análise do impacto de medidas de vacinação e isolamento social na prevalência da COVID-19 no Brasil.
 
-Modelo implementado usando a linguagem C e paralelizado com MPI.
+Modelo implementado usando a linguagem C e paralelizado com MPI. Bibliotecas do Python foram utilizadas para criação de gráficos, heatmaps e análise dos resultados.
 
 <br/>
 
